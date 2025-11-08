@@ -1,0 +1,8 @@
+
+## -- BLOCK:make-h --
+*~
+## -- BLOCK:make-h --
+## -- BLOCK:go --
+.build/*
+.releases/*
+## -- BLOCK:go --
