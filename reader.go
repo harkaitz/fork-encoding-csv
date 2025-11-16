@@ -396,6 +396,31 @@ parseField:
 						r.fieldIndexes = append(r.fieldIndexes, len(r.recordBuffer))
 						r.fieldPositions = append(r.fieldPositions, fieldPos)
 						break parseField
+					case unicode.IsSpace(rn):
+						// `"<space>` sequence (end of field).
+						line = line[commaLen:]
+						pos.col += commaLen
+						r.fieldIndexes = append(r.fieldIndexes, len(r.recordBuffer))
+						r.fieldPositions = append(r.fieldPositions, fieldPos)
+						i := bytes.IndexFunc(line, func(r rune) bool {
+							return !unicode.IsSpace(r)
+						})
+						if i < 0 {
+							break parseField
+						}
+						line = line[i:]
+						pos.col += i
+						rn = nextRune(line)
+						if rn == r.Comma {
+							line = line[commaLen:]
+							pos.col += commaLen
+							continue parseField
+						} else if lengthNL(line) == len(line) {
+							break parseField
+						} else {
+							err = &ParseError{StartLine: recLine, Line: r.numLine, Column: pos.col, Err: ErrQuote}
+							break parseField
+						}
 					case r.LazyQuotes:
 						// `"` sequence (bare quote).
 						r.recordBuffer = append(r.recordBuffer, '"')

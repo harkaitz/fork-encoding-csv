@@ -274,6 +274,22 @@ field"`,
 }, {
 	Name:   "QuotedTrailingCRCR",
 	Input:  "§\"field∑\"\r\r",
+	Output: [][]string{{"field"}},
+}, {
+	Name:   "QuotedTrailingSpace",
+	Input:  "§\"field\"    ",
+	Output: [][]string{{"field"}},
+}, {
+	Name:   "QuotedTrailingSpaceCR",
+	Input:  "§\"field\"     \r",
+	Output: [][]string{{"field"}},
+}, {
+	Name:   "QuotedTrailingSpaceCRCR",
+	Input:  "§\"field\"     \r\r",
+	Output: [][]string{{"field"}},
+}, {
+	Name:   "QuotedTrailingTrash",
+	Input:  "§\"field\"  ∑a  ",
 	Errors: []error{&ParseError{Err: ErrQuote}},
 }, {
 	Name:   "FieldCR",
